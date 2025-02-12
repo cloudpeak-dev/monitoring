@@ -3,6 +3,7 @@ networks:
 
 services:
   vector:
+    restart: always
     image: timberio/vector:0.43.1-debian
     volumes:
       - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
@@ -16,6 +17,7 @@ services:
       - loki
 
   loki:
+    restart: always
     image: grafana/loki:latest
     volumes:
       - /docker_data/loki:/loki
@@ -26,6 +28,7 @@ services:
       - default
 
   grafana:
+    restart: always
     image: grafana/grafana:latest
     environment:
       - "GF_SMTP_ENABLED=true"
@@ -45,6 +48,7 @@ services:
 
   # For linux logs
   promtail:
+    restart: always
     image: grafana/promtail:latest
     volumes:
       - /var/log:/var/log
@@ -54,6 +58,7 @@ services:
 
   # Other metrics
   prometheus:
+    restart: always
     image: prom/prometheus
     volumes:
       - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
@@ -67,6 +72,7 @@ services:
 
   # For system metrics
   node_exporter:
+    restart: always
     image: prom/node-exporter
     ports:
       - "9100:9100"
