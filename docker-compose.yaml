@@ -2,41 +2,25 @@ networks:
   default:
 
 services:
-  alloy:
-    image: grafana/alloy:latest
-    volumes:
-      - ./configs/config.alloy:/etc/alloy/config.alloy:ro
-      - /docker_data/alloy:/var/lib/alloy/data
-    ports:
-      - "12345:12345"
-    networks:
-      - default
-    command:
-      [
-        "run",
-        "--server.http.listen-addr=0.0.0.0:12345",
-        "--storage.path=/var/lib/alloy/data",
-        "/etc/alloy/config.alloy",
-      ]
-  vector:
-    restart: always
-    image: timberio/vector:0.43.1-debian
-    volumes:
-      - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/log/dokku/apps:/var/log/dokku/apps
-    ports:
-      - "8686:8686"
-    networks:
-      - default
-    depends_on:
-      - loki
+  # vector:
+  #   restart: always
+  #   image: timberio/vector:0.43.1-debian
+  #   volumes:
+  #     - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /var/log/dokku/apps:/var/log/dokku/apps
+  #   ports:
+  #     - "8686:8686"
+  #   networks:
+  #     - default
+  #   depends_on:
+  #     - loki
 
   loki:
     restart: always
     image: grafana/loki:latest
     volumes:
-      - /docker_dataaa/loki:/etc/loki/
+      - /docker_data/loki:/loki
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
@@ -63,14 +47,14 @@ services:
       - .env
 
   # For linux logs
-  promtail:
-    restart: always
-    image: grafana/promtail:latest
-    volumes:
-      - /var/log:/var/log
-    command: -config.file=/etc/promtail/config.yml
-    networks:
-      - default
+  # promtail:
+  #   restart: always
+  #   image: grafana/promtail:latest
+  #   volumes:
+  #     - /var/log:/var/log
+  #   command: -config.file=/etc/promtail/config.yml
+  #   networks:
+  #     - default
 
   # Other metrics
   prometheus:
@@ -87,10 +71,21 @@ services:
       - default
 
   # For system metrics
-  node_exporter:
-    restart: always
-    image: prom/node-exporter
+  # node_exporter:
+  #   restart: always
+  #   image: prom/node-exporter
+  #   ports:
+  #     - "9100:9100"
+  #   networks:
+  #     - default
+
+  alloy:
+    image: grafana/alloy:latest
+    volumes:
+      - ./configs/config.alloy:/etc/alloy/config.alloy:ro
+      - /docker_data/alloy:/var/lib/alloy/data
     ports:
-      - "9100:9100"
+      - "12345:12345"
     networks:
       - default
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
