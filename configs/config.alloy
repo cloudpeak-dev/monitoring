@@ -3,11 +3,13 @@ local.file_match "example" {
     __address__ = "localhost",
     __path__    = "/var/log/*.log",
   }]
+  sync_period = "5s"
 }
 
 loki.source.file "example" {
   targets    = local.file_match.example.targets
   forward_to = [loki.write.default.receiver]
+  tail_from_end = true
 }
 
 loki.write "default" {
