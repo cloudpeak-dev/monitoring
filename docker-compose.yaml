@@ -2,6 +2,22 @@ networks:
   default:
 
 services:
+  alloy:
+    image: grafana/alloy:latest
+    volumes:
+      - ./configs/config.alloy:/etc/alloy/config.alloy:ro
+      - /docker_data/alloy:/var/lib/alloy/data
+    ports:
+      - "12345:12345"
+    networks:
+      - default
+    command:
+      [
+        "run",
+        "--server.http.listen-addr=0.0.0.0:12345",
+        "--storage.path=/var/lib/alloy/data",
+        "/etc/alloy/config.alloy",
+      ]
   vector:
     restart: always
     image: timberio/vector:0.43.1-debian
