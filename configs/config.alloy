@@ -47,7 +47,7 @@ prometheus.exporter.unix "integrations_node_exporter" {
 
 // Define how to scrape metrics from the node_exporter
 prometheus.scrape "integrations_node_exporter" {
-scrape_interval = "15s"
+  scrape_interval = "15s"
   // Use the targets with labels from the discovery.relabel component
   targets    = discovery.relabel.integrations_node_exporter.output
   // Send the scraped metrics to the relabeling component
@@ -128,7 +128,7 @@ loki.source.file "logs_integrations_integrations_node_exporter_direct_scrape" {
 loki.write "local" {
     endpoint {
         // Send logs to a locally running Loki instance
-        url ="http://loki:3100/loki/api/v1/push"
+        url = "http://loki:3100/loki/api/v1/push"
     }
 }
 
