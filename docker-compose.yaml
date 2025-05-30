@@ -1,3 +1,5 @@
+version: "3.8"
+
 networks:
   default:
 
@@ -18,7 +20,7 @@ services:
 
   loki:
     restart: always
-    image: grafana/loki:latest
+    image: grafana/loki:${GRAFANA_LOKI_VERSION:-3.5.0}
     volumes:
       - ./configs/loki.yaml:/etc/loki/local-config.yaml
       # - /docker_data/loki:/loki
@@ -30,7 +32,7 @@ services:
 
   grafana:
     restart: always
-    image: grafana/grafana:latest
+    image: grafana/grafana:${GRAFANA_VERSION:-11.6.1}
     environment:
       - "GF_SMTP_ENABLED=true"
       - "GF_SMTP_HOST=smtp.gmail.com:587"
@@ -60,7 +62,7 @@ services:
   # Other metrics
   prometheus:
     restart: always
-    image: prom/prometheus
+    image: prom/prometheus:${PROMETHEUS_VERSION:-v3.3.0}
     volumes:
       - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
       - /docker_data/prometheus:/prometheus
@@ -82,7 +84,7 @@ services:
   #     - default
 
   alloy:
-    image: grafana/alloy:latest
+    image: grafana/alloy:${GRAFANA_ALLOY_VERSION:-v1.8.2}
     volumes:
       - ./configs/config.alloy:/etc/alloy/config.alloy:ro
       - /docker_data/alloy:/var/lib/alloy/data
