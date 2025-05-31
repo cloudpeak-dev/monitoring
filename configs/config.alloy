@@ -1,23 +1,21 @@
-local.file_match "example" {
-  path_targets = [{
-    __address__ = "localhost",
-    __path__    = "/var/log/*.log",
-  }]
+local.file_match "local_files" {
+  path_targets = [{"__path__" = "/var/log/*.log"}]
   sync_period = "5s"
 }
 
-loki.source.file "example" {
-  targets    = local.file_match.example.targets
-  forward_to = [loki.write.default.receiver]
+loki.source.file "log_scrape" {
+  targets    = local.file_match.local_files.targets
+  forward_to = [loki.process.filter_logs.receiver]
   tail_from_end = true
 }
 
-loki.write "default" {
+loki.write "grafana_loki" {
   endpoint {
-    url = "http://loki:3100/loki/api/v1/push"
-  }
-  external_labels = {}
-}
+    url = "http://localhost:3100/loki/api/v1/push"
 
-// Enable live debugging features (empty config means use defaults)
-livedebugging{}
+    // basic_auth {
+    //  username = "admin"
+    //  password = "admin"
+    // }
+  }
+}
