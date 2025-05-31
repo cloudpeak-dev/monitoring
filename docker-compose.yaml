@@ -4,26 +4,27 @@ networks:
   default:
 
 services:
-  # vector:
-  #   restart: always
-  #   image: timberio/vector:0.43.1-debian
-  #   volumes:
-  #     - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - /var/log/dokku/apps:/var/log/dokku/apps
-  #   ports:
-  #     - "8686:8686"
-  #   networks:
-  #     - default
-  #   depends_on:
-  #     - loki
+  # Collect logs from Dokku apps
+  vector:
+    restart: always
+    image: timberio/vector:0.43.1-debian
+    volumes:
+      - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/log/dokku/apps:/var/log/dokku/apps
+    ports:
+      - "8686:8686"
+    networks:
+      - default
+    depends_on:
+      - loki
 
   loki:
     restart: always
     image: grafana/loki:${GRAFANA_LOKI_VERSION:-3.5.0}
-    # volumes:
-    # - ./configs/loki.yaml:/etc/loki/local-config.yaml
-    # - /docker_data/loki:/loki
+    volumes:
+      - ./configs/loki.yaml:/etc/loki/local-config.yaml
+      - /docker_data/loki:/loki
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
@@ -40,7 +41,7 @@ services:
       - "GF_SMTP_PASSWORD=${SMTP_PASSWORD}"
       - "GF_SMTP_FROM_ADDRESS=server.rokaskasperavicius@gmail.com"
     volumes:
-      # - /docker_data/grafana/:/var/lib/grafana
+      - /docker_data/grafana/:/var/lib/grafana
       - ./configs/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     ports:
       - "3000:3000"
@@ -49,23 +50,12 @@ services:
     env_file:
       - .env
 
-  # For linux logs
-  # promtail:
-  #   restart: always
-  #   image: grafana/promtail:latest
-  #   volumes:
-  #     - /var/log:/var/log
-  #   command: -config.file=/etc/promtail/config.yml
-  #   networks:
-  #     - default
-
-  # Other metrics
   prometheus:
     restart: always
     image: prom/prometheus:${PROMETHEUS_VERSION:-v3.3.0}
-    # volumes:
-    #   - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
-    #   - /docker_data/prometheus:/prometheus
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /docker_data/prometheus:/prometheus
     command:
       - --web.enable-remote-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
@@ -73,23 +63,3 @@ services:
       - "9090:9090"
     networks:
       - default
-
-  # For system metrics
-  # node_exporter:
-  #   restart: always
-  #   image: prom/node-exporter
-  #   ports:
-  #     - "9100:9100"
-  #   networks:
-  #     - default
-
-  # alloy:
-  #   image: grafana/alloy:${GRAFANA_ALLOY_VERSION:-v1.8.2}
-  #   volumes:
-  #     - ./configs/config.alloy:/etc/alloy/config.alloy:ro
-  #     - /docker_data/alloy:/var/lib/alloy/data
-  #   ports:
-  #     - "12345:12345"
-  #   networks:
-  #     - default
-  #   command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
