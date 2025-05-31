@@ -13,6 +13,17 @@ loki.source.file "log_scrape" {
   tail_from_end = true
 }
 
+discovery.docker "linux" {
+  host = "unix:///var/run/docker.sock"
+}
+
+loki.source.docker "default" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.linux.targets
+  labels     = {"app" = "docker"}
+  forward_to = [loki.write.grafana_loki.receiver]
+}
+
 loki.write "grafana_loki" {
   endpoint {
     url = "http://localhost:3100/loki/api/v1/push"
