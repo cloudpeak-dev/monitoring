@@ -21,7 +21,7 @@ services:
 
   loki:
     restart: always
-    image: grafana/loki:${GRAFANA_LOKI_VERSION:-3.5.0}
+    image: grafana/loki:3.5.0
     volumes:
       - /docker_data/loki:/loki
     ports:
@@ -32,7 +32,7 @@ services:
 
   grafana:
     restart: always
-    image: grafana/grafana:${GRAFANA_VERSION:-11.6.1}
+    image: grafana/grafana:11.6.1
     environment:
       - "GF_SMTP_ENABLED=true"
       - "GF_SMTP_HOST=smtp.gmail.com:587"
@@ -51,7 +51,7 @@ services:
 
   prometheus:
     restart: always
-    image: prom/prometheus:${PROMETHEUS_VERSION:-v3.3.0}
+    image: prom/prometheus:3.3.0
     volumes:
       - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
       - /docker_data/prometheus:/prometheus
