@@ -23,7 +23,6 @@ services:
     restart: always
     image: grafana/loki:${GRAFANA_LOKI_VERSION:-3.5.0}
     volumes:
-      - ./configs/loki.yaml:/etc/loki/local-config.yaml
       - /docker_data/loki:/loki
     ports:
       - "3100:3100"
