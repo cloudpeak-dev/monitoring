@@ -1,3 +1,4 @@
+// https://grafana.com/docs/alloy/latest/tutorials/send-logs-to-loki/
 local.file_match "local_files" {
   path_targets = [
     {"__path__" = "/var/log/*.log"},
@@ -15,10 +16,20 @@ loki.source.file "log_scrape" {
 loki.write "grafana_loki" {
   endpoint {
     url = "http://localhost:3100/loki/api/v1/push"
+  }
+}
 
-    // basic_auth {
-    //  username = "admin"
-    //  password = "admin"
-    // }
+// https://grafana.com/docs/alloy/latest/tutorials/send-metrics-to-prometheus/
+prometheus.exporter.unix "local_system" { }
+
+prometheus.scrape "scrape_metrics" {
+  targets         = prometheus.exporter.unix.local_system.targets
+  forward_to      = [prometheus.remote_write.metrics_service.receiver] 
+  scrape_interval = "5s"
+}
+
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = "http://localhost:9090/api/v1/write"
   }
 }
