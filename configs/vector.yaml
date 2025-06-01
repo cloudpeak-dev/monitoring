@@ -10,6 +10,7 @@ transforms:
     inputs: ["docker-global-source"]
     source: |
       .app_name = get!(., ["label", "com.dokku.app-name"])
+      .message = get!(., ["message"])
       .time = now()
       del(.label)
 
@@ -23,9 +24,10 @@ sinks:
       codec: json
     labels:
       app: "{{ app_name }}"
-  console_out:
-    type: console
-    inputs:
-      - flatten_labels
-    encoding:
-      codec: json
+      message: "{{ message }}"
+  # console_out:
+  #   type: console
+  #   inputs:
+  #     - flatten_labels
+  #   encoding:
+  #     codec: json
