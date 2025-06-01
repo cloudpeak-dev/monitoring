@@ -23,9 +23,9 @@ sinks:
       codec: json
     labels:
       app: "{{ app_name }}"
-  # console_out:
-  #   type: console
-  #   inputs:
-  #     - flatten_labels
-  #   encoding:
-  #     codec: json
+  console_out:
+    type: console
+    inputs:
+      - flatten_labels
+    encoding:
+      codec: json
