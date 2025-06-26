@@ -29,6 +29,11 @@ prometheus.scrape "scrape_metrics" {
   scrape_interval = "10s"
 }
 
+prometheus.scrape "pihole" {
+  targets = [{ __address__ = "localhost:9617" }]
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+}
+
 prometheus.remote_write "metrics_service" {
   endpoint {
     url = "http://localhost:9090/api/v1/write"
