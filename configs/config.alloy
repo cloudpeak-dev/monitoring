@@ -25,13 +25,14 @@ prometheus.exporter.unix "local_system" { }
 
 prometheus.scrape "scrape_metrics" {
   targets         = prometheus.exporter.unix.local_system.targets
-  forward_to      = [prometheus.remote_write.metrics_service.receiver] 
-  scrape_interval = "10s"
+  forward_to      = [prometheus.remote_write.metrics_service.receiver]
+  scrape_interval = "5s"
 }
 
 prometheus.scrape "pihole" {
   targets = [{ __address__ = "localhost:9617" }]
   forward_to = [prometheus.remote_write.metrics_service.receiver]
+  scrape_interval = "5s"
 }
 
 prometheus.remote_write "metrics_service" {
