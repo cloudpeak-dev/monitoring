@@ -60,16 +60,3 @@ services:
       - "9090:9090"
     networks:
       - default
-  # Exporter for Pi-hole metrics
-  pihole-exporter:
-    restart: unless-stopped
-    image: ekofr/pihole-exporter:latest
-    environment:
-      PIHOLE_HOSTNAME: "192.168.1.7"
-      PIHOLE_PASSWORD: "1a9016e6d2b4e220c7daae5a4b383bb6"
-      PIHOLE_PORT: "1080"
-      PORT: "9617"
-    ports:
-      - "9617:9617"
-    networks:
-      - default
