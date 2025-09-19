@@ -3,11 +3,11 @@
 
 ### Alloy
 https://grafana.com/docs/alloy/latest/
-- Local: http://192.168.1.7:12345/graph
+- Local: http://192.168.1.2:12345/graph
 
 ### Prometheus
-- Local: http://192.168.1.7:9090/query
+- Local: http://192.168.1.2:9090/query
 
 ### Grafana
-- Grafana UI Local: http://192.168.1.7:3000/
+- Grafana UI Local: http://192.168.1.2:3000/
 - Grafana UI Prod: https://monitoring.cloudpeak.dev/

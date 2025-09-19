@@ -37,6 +37,7 @@ services:
       - "GF_SMTP_USER=server.rokaskasperavicius@gmail.com"
       - "GF_SMTP_PASSWORD=${SMTP_PASSWORD}"
       - "GF_SMTP_FROM_ADDRESS=server.rokaskasperavicius@gmail.com"
+      - "GF_DATABASE_WAL=true"
     volumes:
       - /docker_data/grafana/:/var/lib/grafana
       - ./configs/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
