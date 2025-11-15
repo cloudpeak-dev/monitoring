@@ -2,4 +2,4 @@ compactor:
   retention_enabled: true
 
 limits_config:
-  retention_period: 15d
+  retention_period: 360h
