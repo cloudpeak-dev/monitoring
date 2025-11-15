@@ -27,7 +27,14 @@ storage_config:
     directory: /loki/chunks
 
 compactor:
+  working_directory: /loki/compactor
+  compaction_interval: 10m0s
+  apply_retention_interval: 0s
   retention_enabled: true
+  retention_delete_delay: 2h0m0s
+  delete_request_store: ""
+  delete_request_store_key_prefix: index/
+  delete_request_store_db_type: boltdb
 
 limits_config:
   retention_period: 15d
