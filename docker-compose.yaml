@@ -30,7 +30,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - /docker_data/loki-2:/loki
+      - /docker_data/loki:/loki
       - ./configs/loki.yaml:/etc/loki/local-config.yaml
     ports:
       - "3100:3100"
