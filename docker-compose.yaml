@@ -2,21 +2,6 @@ networks:
   default:
 
 services:
-  # Collect logs from Dokku apps
-  vector:
-    restart: unless-stopped
-    image: timberio/vector:0.43.1-debian
-    volumes:
-      - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/log/dokku/apps:/var/log/dokku/apps
-    ports:
-      - "8686:8686"
-    networks:
-      - default
-    depends_on:
-      - loki
-
   loki:
     restart: unless-stopped
     image: grafana/loki:3.5.0
@@ -80,3 +65,18 @@ services:
       - "9090:9090"
     networks:
       - default
+    
+  # Collect logs from Dokku apps
+  vector:
+    restart: unless-stopped
+    image: timberio/vector:0.43.1-debian
+    volumes:
+      - ./configs/vector.yaml:/etc/vector/vector.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/log/dokku/apps:/var/log/dokku/apps
+    ports:
+      - "8686:8686"
+    networks:
+      - default
+    depends_on:
+      - loki
