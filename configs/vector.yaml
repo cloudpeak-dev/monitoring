@@ -24,7 +24,6 @@ sinks:
       codec: json
     labels:
       app: "{{ app_name }}"
-      message: "{{ message }}"
   # console_out:
   #   type: console
   #   inputs:

@@ -65,7 +65,7 @@ services:
       - "9090:9090"
     networks:
       - default
-    
+
   # Collect logs from Dokku apps
   vector:
     restart: unless-stopped
