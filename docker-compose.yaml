@@ -23,6 +23,25 @@ services:
     networks:
       - default
 
+  prometheus:
+    restart: unless-stopped
+    image: prom/prometheus:v3.3.0
+    healthcheck:
+      test: [ "CMD", "wget", "--tries=1", "--spider", "http://localhost:9090/-/healthy" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /docker_data/prometheus:/prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - default
+
   grafana:
     restart: unless-stopped
     image: grafana/grafana:11.6.1
@@ -51,20 +70,11 @@ services:
       - default
     env_file:
       - .env
-
-  prometheus:
-    restart: unless-stopped
-    image: prom/prometheus:v3.3.0
-    volumes:
-      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
-      - /docker_data/prometheus:/prometheus
-    command:
-      - --web.enable-remote-write-receiver
-      - --config.file=/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - default
+    depends_on:
+      loki:
+        condition: service_healthy
+      prometheus:
+        condition: service_healthy
 
   # Collect logs from Dokku apps
   vector:
@@ -79,4 +89,5 @@ services:
     networks:
       - default
     depends_on:
-      - loki
+      loki:
+        condition: service_healthy
